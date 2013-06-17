@@ -1,0 +1,371 @@
+{
+    "version": "1.1.0.1",
+    "redbox.version.string": "${redbox.version}",
+    "redbox.identity": {
+        "institution": "University of Examples",
+        "RIF-CS Group": "The University of Examples, Australia"
+    },
+    "configured": true,
+    "urlBase": "${server.url.base}",
+    "email": "DO_NOT_CHANGE",
+    "sso": {
+        "plugins": [],
+        "urlExclusions": {
+            "startsWith": ["css/", "feed/", "images/", "js/", "flowplayer/"],
+            "endsWith": [".ico"],
+            "equals": ["css"]
+        },
+        "trustTokens": {
+        }
+    },
+    "accesscontrol": {
+        "type": "derby",
+        "derby": {
+        }
+    },
+    "authentication": {
+        "type": "internal",
+        "internal": {
+            "path": "${fascinator.home}/security/users.properties"
+        }
+    },
+    "roles": {
+        "type": "internal",
+        "internal": {
+            "path": "${fascinator.home}/security/roles.properties"
+        }
+    },
+    "storage": {
+        "type": "file-system",
+        "file-system": {
+            "home": "${storage.home}"
+        }
+    },
+    "messaging": {
+        "url": "tcp://localhost:${amq.port}",
+        "stompUrl": "stomp://localhost:${amq.stomp.port}",
+        "home": "${fascinator.home}/activemq-data",
+        "startup": {
+            "delay": "5000",
+            "timer": "15000"
+        },
+        "statistics": {
+            "enabled": true,
+            "destination": "houseKeeping"
+        },
+        "toolChainQueue": "transactionManager",
+        "threads": [
+            {
+                "id": "transactionManager",
+                "description": "Transaction Manager Queue for complicated tool chains.",
+                "priority": "5",
+                "config": {
+                    "name": "transactionManager",
+                    "transactionManagerPlugin": "curation-mint"
+                }
+            },
+            {
+                "id": "solrwrapper",
+                "description": "Wrapper for ingest into main Solr core.",
+                "priority": "5",
+                "config": {
+                    "name": "solrwrapper"
+                }
+            },
+            {
+                "id": "subscriber",
+                "description": "Subscriber queue for event log.",
+                "priority": "7",
+                "config": {
+                    "name": "subscriber",
+                    "subscribers": ["solr-event-log"]
+                }
+            },
+            {
+                "id": "emailnotification",
+                "description": "Queue to send email notifications",
+                "priority": "8",
+                "config": {
+                    "name": "emailnotification",
+                    "debug": false,
+                    "from": {
+                        "email": "${admin.email}",
+                        "name": "The Mint"
+                    },
+                    "smtp": {
+                        "host": "${smtp.host}"
+                    },
+                    "defaults": {
+                        "subject": "Notification",
+                        "body": "Default email message"
+                    }
+                }
+            }
+        ]
+    },
+    "curation": {
+        "curationEmailAddress": "${admin.email}",
+        "curationRequiresConfirmation": false,
+        "pidProperty": "localPid",
+        "nlaIntegration": {
+            "enabled": false,
+            "pidProperty": "nlaPid",
+            "agencyCode": "TO-DO",
+            "agencyName": "The University of Examples, Australia",
+            "includeTest": {
+                "repository.name": "People"
+            }
+        }
+    },
+    "indexer": {
+        "type": "solr",
+        "properties": "TF-OBJ-META",
+        "useCache": true,
+        "buffer": {
+            "docLimit": "200",
+            "sizeLimit": "204800",
+            "timeLimit": "30"
+        },
+        "solr": {
+            "uri": "http://localhost:${jetty.port}/solr/fascinator",
+            "coreName": "fascinator",
+            "autocommit": false,
+            "embedded": false
+        },
+        "anotar": {
+            "uri": "http://localhost:${jetty.port}/solr/anotar",
+            "coreName": "anotar",
+            "autocommit": true
+        },
+         "eventLog": {
+            "uri": "http://localhost:${jetty.port}/solr/eventlog",
+            "coreName": "eventlog",
+            "autocommit": false,
+            "embedded": false
+        }
+    },
+    "transformerDefaults": {
+        "ingest-relations": {
+            "id": "ingest-relations"
+        },
+        "local": {
+            "id": "local",
+            "useIncrements": false
+        },
+        "jsonVelocity": {
+            "id" : "jsonVelocity",
+            "sourcePayload" : "metadata.json",
+            "templatesPath" : "${fascinator.home}/templates",
+            "portalId": "default"
+        }
+    },
+    "uploader": {
+    },
+    "mime-types": {
+        "tfpackage": "application/x-fascinator-package"
+    },
+    "database-service": {
+        "derbyHome": "${fascinator.home}/database-service"
+    },
+    "portal": {
+        "home": "${portal.home}",
+        "contentDir": "${fascinator.home}/content",
+        "defaultView": "default",
+        "skins": {
+            "default": "default",
+            "order": [ "local", "mint" ]
+        },
+        "caching": {
+            "caches": {
+                "scriptObjects": {
+                    "label": "Cache for Jython scripts",
+                    "profile": "dynamic",
+                    "lastModifiedCheck": true
+                },
+                "pathLookup": {
+                    "label": "Cache for path lookups",
+                    "profile": "full"
+                }
+            },
+            "profiles": {
+                "default": {
+                    "label": "Factory defaults",
+                    "refreshIntervalSeconds": 30,
+                    "maxElementsInMemory": 10000,
+                    "eternal": false,
+                    "timeToIdleSeconds": 120,
+                    "timeToLiveSeconds": 120,
+                    "overflowToDisk": false,
+                    "maxElementsOnDisk": 10000,
+                    "diskPersistent": false,
+                    "memoryStoreEvictionPolicy": "LRU"
+                },
+                "off": {
+                    "label": "Disabled",
+                    "maxElementsInMemory": 10000,
+                    "eternal": false,
+                    "timeToIdleSeconds": 1,
+                    "timeToLiveSeconds": 1,
+                    "overflowToDisk": false,
+                    "maxElementsOnDisk": 1,
+                    "diskPersistent": false,
+                    "memoryStoreEvictionPolicy": "LRU"
+                },
+                "dynamic": {
+                    "label": "Dynamic - Caches are refreshed periodically",
+                    "maxElementsInMemory": 25000,
+                    "eternal": false,
+                    "timeToIdleSeconds": 120,
+                    "timeToLiveSeconds": 300,
+                    "overflowToDisk": false,
+                    "maxElementsOnDisk": 25000,
+                    "diskPersistent": false,
+                    "memoryStoreEvictionPolicy": "LRU"
+                },
+                "full": {
+                    "label": "Full - Caches never expire",
+                    "maxElementsInMemory": 100000,
+                    "eternal": true,
+                    "timeToIdleSeconds": 0,
+                    "timeToLiveSeconds": 0,
+                    "overflowToDisk": true,
+                    "maxElementsOnDisk": 100000,
+                    "diskPersistent": false,
+                    "memoryStoreEvictionPolicy": "LRU"
+                }
+            }
+        },
+        "layout": "layout",
+        "nativeJython": true,
+        "packageTypes": {
+            "default": {
+                "jsonconfig": "packaging-config.json",
+                "packages-in-package": false
+            },
+            "servicesUI": {
+                "jsonconfig": "servicesUI.json",
+                "packages-in-package": false
+            },
+            "servicesUI2": {
+                "jsonconfig": "servicesUI2.json",
+                "packages-in-package": false
+            }
+        },
+        "harvestFiles": "${fascinator.home}/harvest",
+        "houseKeeping": {
+            "config": {
+                "derbyHome": "${fascinator.home}/database",
+                "quartzConfig": "${fascinator.home}/quartz.properties",
+                "desktop": true,
+                "frequency": "3600",
+                "jobs": [
+                    {
+                        "name": "nla-poll",
+                        "type": "external",
+                        "url": "http://localhost:${jetty.port}/mint/default/hkjobs/nla.script",
+                        "timing": "0 0/15 * * * ?"
+                    }
+                ]
+            }
+        },
+        "oai-pmh": {
+            "sessionExpiry": "300000",
+            "metadataFormats": {
+                "rif": {
+                    "enabledInAllViews": false,
+                    "enabledViews": ["published"],
+                    "schema": "http://ands.org.au/standards/rif-cs/registryObjects http://services.ands.org.au/home/orca/schemata/registryObjects.xsd",
+                    "metadataNamespace": "http://ands.org.au/standards/rif-cs/registryObjects"
+                },
+                "eac-cpf": {
+                    "enabledInAllViews": false,
+                    "enabledViews": ["NLA_Harvest", "published"],
+                    "schema": "urn:isbn:1-931666-33-4 http://eac.staatsbibliothek-berlin.de/schema/cpf.xsd",
+                    "metadataNamespace": "urn:isbn:1-931666-33-4"
+                }
+            }
+        }
+    },
+    "subscriber": {
+        "solr-event-log": {
+            "uri": "http://localhost:${jetty.port}/solr/eventlog",
+            "buffer": {
+                "docLimit": "200",
+                "sizeLimit": "204800",
+                "timeLimit": "30"
+            }
+        }
+    },
+    "restoreTool": {
+        "harvestRemap": {
+            "enabled": true,
+            "allowOlder": false,
+            "failOnMissing": false
+        },
+        "migrationScript": ""
+    },
+    "api": {
+    		"published-records-by-type": { "className": "com.googlecode.fascinator.portal.api.impl.PublishedRecordsByTypeAPICallHandlerImpl"},
+        "countries":{ "className": "com.googlecode.fascinator.portal.api.impl.CountryLookupAPICallHandlerImpl"},
+        "mint-stats" : {
+            "className": "com.googlecode.fascinator.portal.api.impl.MintStatsAPICallHandlerImpl",
+            "stats":
+              {
+                "name" : "mint-all",
+                "query":"*:*",
+                "params": {
+                  "fq":["item_type:\"object\""],
+                  "rows":"100"
+                },
+                "fields" : [
+                  {
+                      "name":"mint-total",
+                      "label" : "total",                  
+                      "solr_field":"numFound",
+                      "solr_field_value":""                                                
+                  },
+                  {
+                    "name" : "parties_people",
+                    "label" : "parties_people",
+                    "solr_field":"display_type",
+                    "solr_field_value":"parties_people" 
+                  },
+                  {
+                    "name" : "parties_groups",
+                    "label" : "parties_groups",
+                    "solr_field":"display_type",
+                    "solr_field_value":"parties_groups" 
+                  },
+                  {
+                    "name" : "research_activities",
+                    "label" : "research_activities",
+                    "solr_field":"display_type",
+                    "solr_field_value":"research_activities" 
+                  },
+                  {
+                    "name" : "activities:",
+                    "label" : "activities:",
+                    "solr_field":"display_type",
+                    "solr_field_value":"research_activities",
+                    "groupby":"repository_name" 
+                  },
+                  {
+                    "name" : "services",
+                    "label" : "services",
+                    "solr_field":"display_type",
+                    "solr_field_value":"services" 
+                  },
+                  {
+                    "name" : "services:",
+                    "label" : "services:",
+                    "solr_field":"display_type",
+                    "solr_field_value":"services",
+                    "groupby":"repository_name" 
+                  }
+              ]
+            }
+        }
+    	}
+
+   
+}

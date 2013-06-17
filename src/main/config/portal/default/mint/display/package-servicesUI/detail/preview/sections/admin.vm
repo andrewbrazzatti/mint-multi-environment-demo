@@ -1,0 +1,9 @@
+#sectionHeading("Admin")
+<div class="meta">
+    <dl>
+    #foreach($key in $self.getSortedKeySet())
+        <dt>$self.escapeHtml($key)</dt>
+        <dd>$self.escapeHtml($self.metadata.get($key))</dd>
+    #end
+    </dl>
+</div>

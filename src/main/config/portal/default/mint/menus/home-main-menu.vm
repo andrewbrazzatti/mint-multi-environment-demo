@@ -1,0 +1,105 @@
+<div class="grid_4">
+    #set($menuTitle = "Actions")
+    #parseTemplate("wrapping/main-menu-open.vm")
+    <ul class="menu">
+        <li><a href="$portalPath/search">Browse</a></li>
+        #if($page.authentication.is_admin())
+        <li><a id="reharvest-view" href="#" rel="$portalId">Reharvest view...</a></li>
+        #end
+        ## TODO views may need to have ownership as well so a user can only delete
+        ## views they created
+        #if($page.authentication.is_logged_in() && $portalId != $defaultPortal)
+        <li><a id="delete-view" href="#" rel="$portalId">Delete view...</a></li>
+        #end
+        #if($page.authentication.is_logged_in())
+         <li><a id="new-service" href="#" rel="$portalId">Add a new Service...</a></li>
+        #end  
+        #if($page.authentication.is_logged_in())
+         <li><a id="new-service2" href="#" rel="$portalId">Add a new Service 2...</a></li>
+        #end  
+        ##<li><a href="$portalPath/upload">Upload</a></li>
+        ##<li><a href="$portalPath/workflows">Upload - Metadata</a></li>
+        <li><a href="$portalPath/about">About</a></li>
+    </ul>
+    #parseTemplate("wrapping/main-menu-close.vm")
+</div>
+#if($page.authentication.is_logged_in())
+        <script type="text/javascript">
+            $(function() {
+                var jQ = $;
+                var processing = false;
+                jQ("#new-service").click(function() {
+                    if (processing) return;
+                    processing = true;
+                    jQ("#new-record").append('<img class="right" src="$portalPath/images/icons/loading.gif" />');
+                    jQ.ajax({
+                        type: "POST",
+                        url: "$portalPath/actions/packaging.ajax",
+                        data: {
+                            ajax: 1,
+                            func: "create-new",
+                            packageType: "servicesUI",
+                            metaList: ["title", "description", "mint:newForm", "mint:formVersion"],
+                            title: "[Untitled]",
+                            description: "",
+                            "mint:newForm": "true",
+                            "mint:formVersion": "$systemConfig.getString("", "redbox.version.string")"
+                        },
+                        success: function(data) {
+                            if (data.status == "ok") {
+                                function redirect() {
+                                    window.location.href = data.url;
+                                }
+                                setTimeout(redirect, 1500);
+                            } else {
+                                alert("Failed to create record!");
+                            }
+                        },
+                        error: function(xhr, status, e) {
+                            alert("Failed to create record!");
+                        },
+                        dataType: "json"
+                    });
+                    return false;
+                });
+            });
+             $(function() {
+                var jQ = $;
+                var processing = false;
+                jQ("#new-service2").click(function() {
+                    if (processing) return;
+                    processing = true;
+                    jQ("#new-record").append('<img class="right" src="$portalPath/images/icons/loading.gif" />');
+                    jQ.ajax({
+                        type: "POST",
+                        url: "$portalPath/actions/packaging.ajax",
+                        data: {
+                            ajax: 1,
+                            func: "create-new",
+                            packageType: "servicesUI2",
+                            metaList: ["title", "description", "mint:newForm", "mint:formVersion"],
+                            title: "[Untitled]",
+                            description: "",
+                            "mint:newForm": "true",
+                            "mint:formVersion": "$systemConfig.getString("", "redbox.version.string")"
+                        },
+                        success: function(data) {
+                            if (data.status == "ok") {
+                                function redirect() {
+                                    window.location.href = data.url;
+                                }
+                                setTimeout(redirect, 1500);
+                            } else {
+                                alert("Failed to create record!");
+                            }
+                        },
+                        error: function(xhr, status, e) {
+                            alert("Failed to create record!");
+                        },
+                        dataType: "json"
+                    });
+                    return false;
+                });
+            });
+        </script>
+    #end

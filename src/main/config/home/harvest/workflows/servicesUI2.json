@@ -1,0 +1,60 @@
+{
+    "harvester": {
+        "type": "workflow-harvester",
+        "workflow-harvester": {
+            "force-storage": "true"
+        }
+    },
+	"workflow-id": "servicesUI2",
+	"page-title": "Services Record",
+	"display-type": "package-service",
+    "transformer": {
+        "curation": ["local"],
+        "metadata": ["jsonVelocity"]
+    },
+    "curation": {
+        "neverPublish": true,
+        "alreadyCurated": false
+    },
+
+    "transformerOverrides": {
+        "local": {
+            "template": "${server.url.base}published/detail/[[OID]]"
+        }
+    },
+
+    "indexer": {
+        "script": {
+            "type": "python",
+            "rules": "simpleworkflow-rules.py"
+        },
+        "params": {
+            "repository.name": "Mint",
+            "repository.type": "Services"
+        }
+    },
+    "form-configuration": "form-configuration/servicesUI2.json",
+    "stages": [
+        {
+            "name": "services-inbox",
+            "label": "inbox",
+            "description": "Services being created",
+            "security": [ "admin"],
+            "visibility": ["admin"],
+            "actions": [ { "action-name" : "next",
+            				"target-step" : "services-completed" }]
+        },
+        {
+            "name": "services-completed",
+            "label": "Completed",
+            "description": "Completed services.",
+            "security": [ "admin"],
+            "visibility": [ "admin"],
+            "template": "workflows/simpleworkflow",
+            "actions": [ { "action-name" : "previous",
+            				"target-step" : "services-inbox" }]
+        }
+    ]
+    
+    
+}

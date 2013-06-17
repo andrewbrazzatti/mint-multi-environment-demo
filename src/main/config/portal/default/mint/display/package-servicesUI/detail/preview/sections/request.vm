@@ -1,0 +1,19 @@
+#set ($submitted = $self.getFirst('redbox:submissionProcess.redbox:submitted'))
+#if ("$!submitted" != "" && "$!submitted" != "null")
+    #sectionHeading("Request")
+    <div class="meta">
+        <dl>
+            #displayFirst("redbox:submissionProcess.dc:date" "Date Submitted")
+            #displayFirst("redbox:submissionProcess.dc:description" "Description")
+            #if("$!self.getFirst('redbox:submissionProcess.dc:title')"!="")
+                #displayFirst("redbox:submissionProcess.dc:title" "Title")
+            #end
+            #displayFirst("redbox:submissionProcess.locrel:prc.foaf:Person.foaf:name" "Contact Name")
+            #displayFirst("redbox:submissionProcess.locrel:prc.foaf:Person.foaf:phone" "Phone Number")
+            #displayFirst("redbox:submissionProcess.locrel:prc.foaf:Person.foaf:mbox" "Email Address")
+            #if("$!self.getFirst('redbox:submissionProcess.skos:note')"!="")
+                #displayFirst("redbox:submissionProcess.skos:note" "Notes")
+            #end
+        </dl>
+    </div>
+#end

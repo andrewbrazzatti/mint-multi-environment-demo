@@ -1,0 +1,77 @@
+#sectionHeading("Management")
+<div class="meta">
+    <dl>
+        <dt>Identifier</dt>
+        <div class="group">
+            #set($origin = $self.getFirst("dc:identifier.redbox:origin"))
+            #if($origin == "internal")
+                <i>Using this record's ID.</i>
+            #else
+                #displayFirst("dc:identifier.rdf:PlainLiteral" "Identifier")
+                #displayFirst("dc:identifier.dc:type.skos:prefLabel" "Type of Identifier")
+            #end
+        </div>
+        <dt>Location</dt>
+        <div class="group">
+            #displayUrlList("bibo:Website" "URL" "dc:identifier" "")
+            #displayFirst("vivo:Location.vivo:GeographicLocation.gn:name" "Stored At")
+            #displayFirst("vivo:Location.vivo:GeographicLocation.skos:note" "Notes")
+        </div>
+        #displayFirst("redbox:retentionPeriod" "Retention Period")
+        #displayFirst("dc:extent" "Extent or Quantity")
+        #displayFirst("redbox:disposalDate" "Disposal Date")
+        <dt>Data Owner (IP)</dt>
+        #set($ownerList = $self.getList("locrel:own.foaf:Agent"))
+        #if ($ownerList.isEmpty())
+        <dd>
+        #noInformation()
+        </dd>
+        #else
+        <dd>
+            <ol>
+            #foreach($entry in $ownerList)
+                #set($owner = $entry.get("foaf:name"))
+                #if("$!owner"!="")
+                    <li>$self.escapeHtml($owner)</li>
+                #end
+            #end
+            </ol>
+        </dd>
+        #end
+
+        #displayFirst("locrel:dtm.foaf:Agent.foaf:name" "Data Custodian")
+        #displayFirst("foaf:Organization.skos:prefLabel" "Data Affiliation")
+        #displayUrlList("foaf:fundedBy.foaf:Agent" "Funding Body/s" "dc:identifier" "skos:prefLabel")
+
+        <dt>Grant Numbers</dt>
+        <dd>
+            #set($grantList = $self.getList("foaf:fundedBy.vivo:Grant"))
+            <ol>
+            #foreach($key in $grantList.keySet())
+                #set($grant = $grantList.get($key))
+                #set($internal = $grant.get("redbox:internalGrant"))
+                <li>
+                    #set($grantId = $grant.get("redbox:grantNumber"))
+                    #if("$!grantId"!="")
+                        $self.escapeHtml($grantId),
+                    #end
+                    #set($grantName = $grant.get("skos:prefLabel"))
+                    #if("$!grantName"!="")
+                        $self.escapeHtml($grantName),
+                    #end
+                    #if("$!internal"!="")<em>(Internal)</em>#end
+                </li>
+            #end
+            </ol>
+        </dd>
+
+        #displayFirst("swrc:ResearchProject.dc:title" "Project Title")
+        #displayFirst("locrel:dpt.foaf:Person.foaf:name" "Depositor")
+        #displayFirst("dc:SizeOrDuration" "Data Size")
+        #displayFirst("dc:Policy" "Institutional Data Management Policy")
+        <div class="group">
+            #displayFirst("redbox:ManagementPlan.redbox:hasPlan" "Data Management Plan")
+            #displayFirst("redbox:ManagementPlan.skos:note" "Notes")
+        </div>
+    </dl>
+</div>

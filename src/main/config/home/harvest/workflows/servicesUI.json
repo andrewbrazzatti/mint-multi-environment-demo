@@ -1,0 +1,59 @@
+{
+    "harvester": {
+        "type": "workflow-harvester",
+        "workflow-harvester": {
+            "force-storage": "true"
+        }
+    },
+
+    "transformer": {
+        "curation": ["local"],
+        "metadata": ["jsonVelocity"]
+    },
+    "curation": {
+        "neverPublish": true,
+        "alreadyCurated": false
+    },
+
+    "transformerOverrides": {
+        "local": {
+            "template": "${server.url.base}published/detail/[[OID]]"
+        }
+    },
+
+    "indexer": {
+        "script": {
+            "type": "python",
+            "rules": "servicesUI-rules.py"
+        },
+        "params": {
+            "repository.name": "Mint",
+            "repository.type": "Metadata Registry"
+        }
+    },
+    "stages": [
+        {
+            "name": "services-inbox",
+            "label": "inbox",
+            "description": "Services being created",
+            "security": [ "admin"],
+            "visibility": ["admin"],
+        },
+         {
+            "name": "services-draft",
+            "label": "Draft",
+            "description": "Services being created",
+            "security": [ "admin"],
+            "visibility": ["admin"],
+            "template": "workflows/servicesUI"
+        },
+        {
+            "name": "services-completed",
+            "label": "Completed",
+            "description": "Completed services.",
+            "security": ["submitter", "admin"],
+            "visibility": ["submitter", "admin"],
+            "template": "workflows/servicesUI"
+        }
+    ]
+}

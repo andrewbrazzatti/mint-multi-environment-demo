@@ -1,0 +1,63 @@
+#sectionHeading("People")
+<div class="meta">
+    <dl>
+        #######################################
+        <dt>Creators</dt>
+        #set($creatorList = $self.getList("dc:creator.foaf:Person"))
+        #if ($creatorList.isEmpty())
+        <dd>
+        #noInformation()
+        </dd>
+        #else
+        <dd>
+            <ol>
+            #foreach($key in $creatorList.keySet())
+                #set($dcCreator = $creatorList.get($key))
+                #set($dcCreatorAssociation = $dcCreator.get("foaf.Organization.skos:prefLabel"))
+                <li>
+                    #displayOptionalKey($dcCreator "foaf:title") #displayRequiredKey($dcCreator "foaf:givenName") #displayRequiredKey($dcCreator "foaf:familyName")#if("$!dcCreatorAssociation" != ""), $self.escapeHtml($dcCreatorAssociation)#end
+                    #if($dcCreator.get("redbox:isCoPrimaryInvestigator"))[CI]#end
+                    #if($dcCreator.get("redbox:isPrimaryInvestigator"))[PI]#end
+                </li>
+            #end
+            </ol>
+        </dd>
+        #end
+
+        #######################################
+        <dt>Primary Contact</dt>
+            #set($firstName = $self.getFirst("locrel:prc.foaf:Person.foaf:givenName"))
+            #set($familyName = $self.getFirst("locrel:prc.foaf:Person.foaf:familyName"))
+            #set($foafEmail = $self.getFirst("locrel:prc.foaf:Person.foaf:email"))
+        <dd>
+        #if ("$!firstName" != "")
+            $self.escapeHtml($firstName) $self.escapeHtml($familyName)#if("$!foafEmail"!=""), $self.escapeHtml($foafEmail)#end
+        #else
+            #noInformation()
+        #end
+        </dd>
+
+        #######################################
+        <dt>Supervisors</dt>
+        #set($supervisorList = $self.getList("swrc:supervisor.foaf:Person"))
+        #if ($supervisorList.isEmpty())
+        <dd>
+        #noInformation()
+        </dd>
+        #else
+        <dd>
+            <ol>
+            #foreach($key in $supervisorList.keySet())
+                #set($supervisor = $supervisorList.get($key))
+                <li>
+                    #displayOptionalKey($supervisor "foaf:title")
+                    #displayRequiredKey($supervisor "foaf:givenName")
+                    #displayRequiredKey($supervisor "foaf:familyName")
+                </li>
+            #end
+            </ol>
+        </dd>
+        #end
+        #displayList("dc:contributor.locrel:clb" "Collaborators")
+    </dl>
+</div>

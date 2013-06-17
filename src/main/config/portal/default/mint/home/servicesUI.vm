@@ -1,0 +1,18 @@
+#set($menuTitle = "My submissions")
+#parseTemplate("wrapping/info-box-open.vm")
+<div class="block">
+    <p>Select a stage to find all records in that stage.</p>
+    <table>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th>Records</th>
+            </tr>
+        </thead>
+        <tbody id="stages">
+        
+        </tbody>
+    </table>
+</div>
+#parseTemplate("wrapping/info-box-close.vm")

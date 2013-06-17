@@ -1,0 +1,63 @@
+#sectionHeading("Subject")
+<div class="meta">
+    <dl>
+        #######################################
+        <dt>Fields of Research</dt>
+        #set($forList = $self.getList("dc:subject.anzsrc:for"))
+        #if ($forList.isEmpty())
+        <dd>
+        #noInformation()
+        </dd>
+        #else
+        <dd>
+            <ol>
+            #foreach($key in $forList.keySet())
+                #set($code = $forList.get($key))
+                <li>$self.escapeHtml($code.get("skos:prefLabel")) ($self.getAnzsrcCode($code))</li>
+            #end
+            </ol>
+        </dd>
+        #end
+
+        #######################################
+        <dt>Socio-Economic Objective</dt>
+        #set($seoList = $self.getList("dc:subject.anzsrc:seo"))
+        #if ($seoList.isEmpty())
+        <dd>
+        #noInformation()
+        </dd>
+        #else
+        <dd>
+            <ol>
+            #foreach($key in $seoList.keySet())
+                #set($code = $seoList.get($key))
+                <li>$self.escapeHtml($code.get("skos:prefLabel")) ($self.getAnzsrcCode($code))</li>
+            #end
+            </ol>
+        </dd>
+        #end
+
+        #######################################
+        <dt>Keywords</dt>
+        #set($keywordList = $self.getList("dc:subject.vivo:keyword"))
+        #if ($keywordList.isEmpty())
+        <dd>
+        #noInformation()
+        </dd>
+        #else
+        <dd>
+            <ol>
+            #foreach($entry in $keywordList)
+                #set($keyword = $entry.get("rdf:PlainLiteral"))
+                #if("$!keyword"!="")
+                    <li>$self.escapeHtml($keyword)</li>
+                #end
+            #end
+            </ol>
+        </dd>
+        #end
+
+        #######################################
+        #displayFirst("dc:subject.anzsrc:toa.skos:prefLabel" "Research Activity")
+    </dl>
+</div>

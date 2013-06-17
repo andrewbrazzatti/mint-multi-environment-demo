@@ -1,0 +1,49 @@
+#sectionHeading("Coverage")
+<div class="meta">
+    <dl>
+        <dt>Date Coverage</dt>
+        #set($dcCoverageFrom = $self.getFirst("dc:coverage.vivo:DateTimeInterval.vivo:start"))
+        #set($dcCoverageTo = $self.getFirst("dc:coverage.vivo:DateTimeInterval.vivo:end"))
+        #if ("$!dcCoverageFrom" != "" || "$!dcCoverageTo" != "")
+        <dd>$!dcCoverageFrom#if("$!dcCoverageTo"!="") to $dcCoverageTo#end</dd>
+        #else
+        <dd>
+        #noInformation()
+        </dd>
+        #end
+        #displayFirst("dc:coverage.redbox:timePeriod" "Time Period")
+
+        #######################################
+        <dt>Geospatial Location</dt>
+        #set($geoList = $self.getList("dc:coverage.vivo:GeographicLocation"))
+        #if ($geoList.isEmpty())
+        <dd>
+        #noInformation()
+        </dd>
+        #else
+        <dd>
+            <ol>
+            #foreach($key in $geoList.keySet())
+                #set($row = $geoList.get($key))
+                #set($type = $row.get("dc:type"))
+                #### Linked Geo Data
+                #if ($type == "text")
+                    #set($url = $row.get("dc:identifier"))
+                    #set($title = $row.get("rdf:PlainLiteral"))
+                    #if ("$!url" != "" || "$!url" != "")
+                        <li><b>Geonames</b>: <a href="$self.escapeHtml($url)">$self.escapeHtml($title)</a></li>
+                    #else
+                        <li><b>Text</b>: $self.escapeHtml($title)</li>
+                    #end
+
+                #### Everything else
+                #else
+                    #set($value = $row.get("rdf:PlainLiteral"))
+                    <li><b>$self.escapeHtml($type)</b>: ($self.escapeHtml($value))
+                #end
+            #end
+            </ol>
+        </dd>
+        #end
+    </dl>
+</div>

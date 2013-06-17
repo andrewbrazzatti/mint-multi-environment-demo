@@ -1,0 +1,50 @@
+#set($oid = $self.getFormData("oid"))
+#set($title = $self.getFormData("title"))
+#set($pageTitle = $title)
+<script type="text/javascript" src="$portalPath/jaffa/libs/jaffaRegexes.js"></script>
+<script type="text/javascript" src="$portalPath/jaffa/libs/jaffaUtilities.js"></script>
+<script type="text/javascript" src="$portalPath/jaffa/libs/jaffaValidation.js"></script>
+<script type="text/javascript" src="$portalPath/jaffa/libs/jaffaWidgets.js"></script>
+<script type="text/javascript" src="$portalPath/jaffa/libs/jaffaUI.js"></script>
+<script type="text/javascript" src="$portalPath/jaffa/libs/jaffaForm.js"></script>
+<script type="text/javascript" src="$portalPath/jaffa/libs/validatious/validatious.2.0.min.0.9.1.js"></script>
+<script type="text/javascript" src="$portalPath/jaffa/jaffa.js"></script>
+<script type="text/javascript" src="$portalPath/jaffa/myJaffa.js"></script>
+
+<form id="services-form">
+	<label for="title">Title</label><input class="jaffa-field" type="text" id="title" /><br/>
+	<label for="viewId">ViewId</label><input class="jaffa-field" type="text" id="viewId" /><br/>
+	<label for="packageType">packageType</label><input class="jaffa-field" type="text" id="packageType" /><br/>
+	<label for="description">description</label><input class="jaffa-field" type="text" id="description" /><br/>
+	<label for="mint:newForm">ViewId</label><input class="jaffa-field" type="text" id="mint:newForm" /><br/>
+	<label for="mint:formVersion">ViewId</label><input class="jaffa-field" type="text" id="mint:formVersion" /><br/>
+	<button id="save-button">Save</button>
+</form>
+
+<script type="text/javascript">
+
+  var jaffa = jaffaFactory({
+        debuggingEnabled: true,
+        urlDataSource: "http://localhost:9001/mint/default/download/7eea557042282ed4fd7ab0717f8ca03a/1e34864a-59a7-4c79-b93e-1e016e4b11db.tfpackage",
+        formSelector: "#services-form",
+        functionSaveData: saveData,
+        callbackPreSave: preSave
+    });
+    
+    $('#save-button').click(function () { jaffa.form.save();});
+
+    function saveData(unmanagedData, isValid,something, serverData) {  
+         serverData["metaList"]= ["title", "description", "mint:newForm", "mint:formVersion"];
+         var url = 'http://localhost:9001/mint/default/workflows/servicesUI.ajax?func=update-package-meta&oid=$oid';
+         jQuery.ajax({type:"POST", url:url, data:serverData,
+			success:function(){ alert('success');},
+			error:function(xhr, status, e){},
+			dataType:"json"
+		}); 
+    }
+    
+    function preSave() {
+    	return true;
+    }
+
+</script>

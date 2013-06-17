@@ -1,0 +1,153 @@
+{
+    "stages": {
+        "services-inbox": {
+            "divs" : 
+            
+             [{ "heading": "sample header",
+            "fields": [
+                {
+                    "component-type": "text-input",
+                    "field-name": "title",
+                    "label": "Name",
+                    "additional-classes": "",
+                    "validation":["required","email"]
+                },
+                {
+                    "component-type": "text-input",
+                    "field-name": "dc:description",
+                    "label": "Description",
+                    "additional-classes": ""
+                },
+                {
+                    "component-type": "text-input",
+                    "field-name": "type",
+                    "label": "Type",
+                    "additional-classes": ""
+                },
+                {
+                    "component-type": "text-input",
+                    "field-name": "website",
+                    "label": "Website",
+                    "additional-classes": ""
+                }
+                
+            ],
+            "buttons": [
+               {
+                 "component-type": "standard-button",
+                 "button-name": "save",
+                 "action": "save",
+                 "label" : "Save"
+               },
+               {
+               	 "component-type": "standard-button",
+                 "button-name": "next",
+                 "action": "next",
+                 "label": "Next >"
+               }
+                 ],
+             "validation": {
+             	 "required": "title"
+             }
+             }]
+        },
+        "services-completed": {
+            "fields": [
+                {
+                    "component-type": "text-input",
+                    "field-name": "title",
+                    "label": "Name",
+                    "additional-classes": ""
+                },
+                {
+                    "component-type": "text-input",
+                    "field-name": "dc:description",
+                    "label": "Description",
+                    "additional-classes": ""
+                },
+                {
+                    "component-type": "text-input",
+                    "field-name": "type",
+                    "label": "Type",
+                    "additional-classes": ""
+                },
+                {
+                    "component-type": "text-input",
+                    "field-name": "website",
+                    "label": "Website",
+                    "additional-classes": ""
+                },
+                {
+                    "component-type": "text-input",
+                    "field-name": "website",
+                    "label": "Website",
+                    "additional-classes": ""
+                }
+            ],
+            "buttons": [
+               {
+                 "component-type": "standard-button",
+                 "button-name": "save",
+                 "action": "save",
+                 "label" : "Save"
+               },
+               {
+               	 "component-type": "standard-button",
+                 "button-name": "next",
+                 "action": "next",
+                 "label": "Next >"
+               }
+                 ],
+             "validation": {
+             	 "required": "title"
+             }
+        },
+        "services-retired": {
+           "fields": [
+                {
+                    "component-type": "text-input",
+                    "field-name": "title",
+                    "label": "Name",
+                    "additional-classes": ""
+                },
+                {
+                    "component-type": "text-input",
+                    "field-name": "dc:description",
+                    "label": "Description",
+                    "additional-classes": ""
+                },
+                {
+                    "component-type": "text-input",
+                    "field-name": "type",
+                    "label": "Type",
+                    "additional-classes": ""
+                },
+                {
+                    "component-type": "text-input",
+                    "field-name": "website",
+                    "label": "Website",
+                    "additional-classes": ""
+                },
+                {
+                    "component-type": "text-input",
+                    "field-name": "website",
+                    "label": "Website",
+                    "additional-classes": ""
+                }
+            ],
+            "buttons": [
+               
+               {
+               	 "component-type": "standard-button",
+                 "button-name": "previous",
+                 "action": "previous",
+                 "label": "< Unretire"
+               }
+               
+                 ],
+             "validation": {
+             	 "required": "title"
+             }
+        }
+    }
+}
